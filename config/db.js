@@ -1,4 +1,4 @@
-import mongoose from 'mongoose'
+const mongoose = require("mongoose");
 
 const connectDB = async () => {
   try {
@@ -6,13 +6,13 @@ const connectDB = async () => {
       useUnifiedTopology: true,
       useNewUrlParser: true,
       useCreateIndex: true,
-    })
+    });
 
-    console.log(`mongoDB Connected ${connect.connection.host}`.green.bold)
+    console.log(`mongoDB Connected ${connect.connection.host}`.green.bold);
   } catch (error) {
-    console.log(`erroe : ${error.message}`)
-    process.exit(1)
+    console.log(`erroe : ${error.message}`);
+    process.exit(1);
   }
-}
+};
 
-export default connectDB
+module.exports = connectDB;

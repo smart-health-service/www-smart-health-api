@@ -1,7 +1,7 @@
-import asyncHandler from "express-async-handler";
-import generateToken from "../utils/JWT.js";
-import User from "../models/users.js";
-import url from "url";
+const asyncHandler = require("express-async-handler");
+const generateToken = require("../utils/JWT" );
+const User = require("../models/users" );
+const url = require("url");
 // @desc    Auth user & get token
 // @route   POST /api/users/login
 // @access  Public
@@ -77,4 +77,4 @@ const getUserDetails = asyncHandler(async (req, res) => {
   }
 });
 
-export { authUser, registerUser, getUserDetails };
+module.exports = { authUser, registerUser, getUserDetails };
