@@ -6,4 +6,4 @@ const generateToken = (id) => {
   });
 };
 
-module.exportss = generateToken;
+module.exports = generateToken;
