@@ -8,6 +8,8 @@ const {
   errorHandler,
 } = require("./server/middleware/errorMiddleware");
 const userRoutes = require("./server/routes/userRoutes");
+const appointmentroutes = require("./server/routes/appointmentRoutes");
+
 dotenv.config();
 const app = express();
 app.use(cors());
@@ -20,7 +22,8 @@ app.get("/", (req, res) => {
   res.send("API is running....");
 });
 
-app.use(".server/api/users", userRoutes);
+app.use("/api/v1/users", userRoutes);
+app.use("/api/v1/appointments", appointmentroutes);
 
 const PORT = process.env.PORT || 5000;
 app.use(notFound);

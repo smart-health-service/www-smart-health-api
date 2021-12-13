@@ -1,11 +1,25 @@
 const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
+const { boolean } = require("yargs");
 
 const userSchema = mongoose.Schema(
   {
     name: {
       type: String,
       required: true,
+    },
+    userAvatar: {
+      type: String,
+      default: "https://source.unsplash.com/random/200x200",
+    },
+    userType: {
+      type: String,
+      default: "user",
+    },
+    isAdmin: {
+      type: Boolean,
+      required: true,
+      default: false,
     },
     email: {
       type: String,
