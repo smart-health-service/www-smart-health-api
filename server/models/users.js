@@ -12,9 +12,10 @@ const userSchema = mongoose.Schema(
       type: String,
       default: "https://source.unsplash.com/random/200x200",
     },
-    userType: {
-      type: String,
-      default: "user",
+    isDoctor: {
+      type: Boolean,
+      required: true,
+      default: false,
     },
     isAdmin: {
       type: Boolean,
@@ -29,6 +30,26 @@ const userSchema = mongoose.Schema(
     password: {
       type: String,
       required: true,
+    },
+    specialist: {
+      type: String,
+      default: null,
+    },
+    edu_history: {
+      type: Array,
+      default: null,
+    },
+    bloodGroup: {
+      type: String,
+      default: null,
+    },
+    height: {
+      type: Number,
+      default: null,
+    },
+    weight: {
+      type: Number,
+      default: null,
     },
   },
   {

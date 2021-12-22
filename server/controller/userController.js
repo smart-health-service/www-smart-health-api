@@ -1,6 +1,6 @@
 const asyncHandler = require("express-async-handler");
-const generateToken = require("../utils/JWT" );
-const User = require("../models/users" );
+const generateToken = require("../utils/JWT");
+const User = require("../models/users");
 const url = require("url");
 // @desc    Auth user & get token
 // @route   POST /api/users/login
@@ -56,12 +56,13 @@ const registerUser = asyncHandler(async (req, res) => {
   }
 });
 
-// @desc    Register a new user
+// @desc    get userdetails
 // @route   get /api/users
-// @access  Public
+// @access  Private
 
 const getUserDetails = asyncHandler(async (req, res) => {
-  const { _id } = url.parse(req.url, true).query;
+  // const { _id } = url.parse(req.url, true).query;
+  const { _id } = req.body;
   const user = await User.findOne({ _id });
 
   if (user) {
@@ -77,4 +78,25 @@ const getUserDetails = asyncHandler(async (req, res) => {
   }
 });
 
-module.exports = { authUser, registerUser, getUserDetails };
+// @desc    get DocLists
+// @route   get /api/users/doctor
+// @access  Private
+
+const getDocLists = asyncHandler(async (req, res) => {
+  const { specialist } = req.body;
+  const docList = await User.find(
+    { isDoctor: true, specialist },
+    { password: 0, height: 0, weight: 0, bloodGroup: 0 }
+  );
+
+  if (docList) {
+    res.status(200).json({
+      docList: docList,
+    });
+  } else {
+    res.status(400);
+    throw new Error("Doctors Not found");
+  }
+});
+
+module.exports = { authUser, registerUser, getUserDetails, getDocLists };
