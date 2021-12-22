@@ -5,11 +5,13 @@ const {
   authUser,
   registerUser,
   getUserDetails,
+  getDocLists,
 } = require("../controller/userController");
 
 const router = express.Router();
 
-router.route("/").post(registerUser).get(getUserDetails);
-router.post("/login", authUser);
+router.post("/users/login", authUser);
+router.route("/users").post(registerUser).get(getUserDetails);
+router.route("/doctor").get(getDocLists);
 
 module.exports = router;
