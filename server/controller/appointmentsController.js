@@ -7,7 +7,7 @@ const url = require("url");
 // @route   POST /api/v1/appoinments
 // @access  private
 const createAppointment = asyncHandler(async (req, res) => {
-  const { creator, notifier, startTime, endTime } = req.body;
+  const { creator, notifier, date, time } = req.body;
 
   const userExists = await User.findOne({ _id: creator });
   const docExists = await User.findOne({ _id: notifier });
@@ -16,12 +16,12 @@ const createAppointment = asyncHandler(async (req, res) => {
     const appointment = await Appointment.create({
       creator,
       notifier,
-      startTime,
-      endTime,
+      date,
+      time,
     });
 
     if (appointment) {
-      res.status(201).json(createAppointment);
+      res.status(201).json("success");
     } else {
       res.status(400);
       throw new Error("failed");
@@ -62,23 +62,40 @@ const getUserAppointments = asyncHandler(async (req, res) => {
 // @route   post /api/v1/appoinments/status
 // @access  private
 const updateAppointmentStatus = asyncHandler(async (req, res) => {
-  const { _id , status } = req.body;
+  const { _id, status } = req.body;
 
   const appointment = await Appointment.findOne({ _id });
 
   if (appointment) {
-    appointment.status = status
+    appointment.status = status;
     const updatedAppointment = await appointment.save();
 
     res.status(200).send(updatedAppointment);
-
   } else {
     res.status(400).send("no appointments found");
   }
+});
+
+// @desc    check availableSlot
+// @route   post /api/v1/appoinments/status
+// @access  private
+const checkAvailableSlots = asyncHandler(async (req, res) => {
+  const { _id, date } = url.parse(req.url, true).query;
+
+  const appointment = await Appointment.find(
+    { notifier: _id, date },
+    {
+      _id: 0,
+      time: 1,
+    }
+  );
+
+  res.send(appointment);
 });
 
 module.exports = {
   createAppointment,
   getUserAppointments,
   updateAppointmentStatus,
+  checkAvailableSlots,
 };

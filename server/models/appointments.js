@@ -2,11 +2,11 @@ const mongoose = require("mongoose");
 
 const appointmentSchema = mongoose.Schema(
   {
-    startTime: {
+    date: {
       type: String,
       required: true,
     },
-    endTime: {
+    time: {
       type: String,
       required: true,
     },

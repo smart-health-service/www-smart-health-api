@@ -4,11 +4,12 @@ const {
   createAppointment,
   getUserAppointments,
   updateAppointmentStatus,
+  checkAvailableSlots,
 } = require("../controller/appointmentsController");
 
 const router = express.Router();
 
 router.route("/").post(createAppointment).get(getUserAppointments);
-router.route("/status").post(updateAppointmentStatus)
+router.route("/status").post(updateAppointmentStatus).get(checkAvailableSlots);
 
 module.exports = router;

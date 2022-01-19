@@ -83,7 +83,7 @@ const getUserDetails = asyncHandler(async (req, res) => {
 // @access  Private
 
 const getDocLists = asyncHandler(async (req, res) => {
-  const { specialist } = req.body;
+  const { specialist } = url.parse(req.url, true).query;
   const docList = await User.find(
     { isDoctor: true, specialist },
     { password: 0, height: 0, weight: 0, bloodGroup: 0 }
