@@ -3,7 +3,7 @@ const generateToken = require("../utils/JWT");
 const User = require("../models/users");
 const url = require("url");
 // @desc    Auth user & get token
-// @route   POST /api/users/login
+// @route   POST /api/v1/users/login
 // @access  Public
 const authUser = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
@@ -24,7 +24,7 @@ const authUser = asyncHandler(async (req, res) => {
 });
 
 // @desc    Register a new user
-// @route   POST /api/users
+// @route   POST /api/v1/users
 // @access  Public
 const registerUser = asyncHandler(async (req, res) => {
   const { name, email, password } = req.body;
@@ -57,12 +57,12 @@ const registerUser = asyncHandler(async (req, res) => {
 });
 
 // @desc    get userdetails
-// @route   get /api/users
+// @route   get /api/v1/users
 // @access  Private
 
 const getUserDetails = asyncHandler(async (req, res) => {
-  // const { _id } = url.parse(req.url, true).query;
-  const { _id } = req.body;
+  const { _id } = url.parse(req.url, true).query;
+  // const { _id } = req.body;
   const user = await User.findOne({ _id });
 
   if (user) {
@@ -79,7 +79,7 @@ const getUserDetails = asyncHandler(async (req, res) => {
 });
 
 // @desc    get DocLists
-// @route   get /api/users/doctor
+// @route   get /api/v1/users/doctor
 // @access  Private
 
 const getDocLists = asyncHandler(async (req, res) => {

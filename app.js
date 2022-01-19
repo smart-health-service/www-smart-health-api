@@ -22,8 +22,8 @@ app.get("/", (req, res) => {
   res.send("API is running....");
 });
 
-app.use("/api/v1", userRoutes);
-app.use("/api/v1/appointments", appointmentroutes);
+app.use("/api/v1/v1", userRoutes);
+app.use("/api/v1/v1/appointments", appointmentroutes);
 
 const PORT = process.env.PORT || 5000;
 app.use(notFound);
