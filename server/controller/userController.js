@@ -63,15 +63,22 @@ const registerUser = asyncHandler(async (req, res) => {
 const getUserDetails = asyncHandler(async (req, res) => {
   const { _id } = url.parse(req.url, true).query;
   // const { _id } = req.body;
-  const user = await User.findOne({ _id });
+  const user = await User.findOne(
+    { _id },
+    {
+      password: 0,
+      height: 0,
+      weight: 0,
+      bloodGroup: 0,
+      isDoctor: 0,
+      isAdmin: 0,
+      createdAt: 0,
+      updatedAt: 0,
+    }
+  );
 
   if (user) {
-    res.status(200).json({
-      _id: user._id,
-      name: user.name,
-      email: user.email,
-      watchList: user.watchList,
-    });
+    res.status(200).json(user);
   } else {
     res.status(400);
     throw new Error("user Not found");
