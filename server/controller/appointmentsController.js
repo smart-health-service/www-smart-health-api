@@ -21,7 +21,15 @@ const createAppointment = asyncHandler(async (req, res) => {
     });
 
     if (appointment) {
-      res.status(201).json("success");
+      const BookedSlots = await Appointment.find(
+        { notifier, date },
+        {
+          _id: 0,
+          time: 1,
+        }
+      );
+
+      res.status(200).send(BookedSlots);
     } else {
       res.status(400);
       throw new Error("failed");
@@ -36,7 +44,7 @@ const createAppointment = asyncHandler(async (req, res) => {
 // @route   get /api/v1/appoinments
 // @access  private
 const getUserAppointments = asyncHandler(async (req, res) => {
-  const { _id, creator, notifier } = url.parse(req.url, true).query;
+  const { creator, notifier } = url.parse(req.url, true).query;
 
   let whereQuery = {};
 
@@ -48,13 +56,13 @@ const getUserAppointments = asyncHandler(async (req, res) => {
     whereQuery["notifier"] = notifier;
   }
   // res.status(201).json(whereQuery);
-  const list = await Appointment.find(whereQuery);
+  const list = await Appointment.find(whereQuery).sort({ date: -1 });
 
   if (list) {
     res.status(200).json(list);
   } else {
     res.status(400);
-    throw new Error(_id);
+    throw new Error("no data found");
   }
 });
 
