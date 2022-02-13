@@ -7,22 +7,22 @@ const url = require("url");
 // @route   POST /api/v1/appoinments
 // @access  private
 const createAppointment = asyncHandler(async (req, res) => {
-  const { creator, notifier, date, time } = req.body;
+  const { creator, assignee, date, time } = req.body;
 
   const userExists = await User.findOne({ _id: creator });
-  const docExists = await User.findOne({ _id: notifier });
+  const docExists = await User.findOne({ _id: assignee });
 
   if (userExists && docExists) {
     const appointment = await Appointment.create({
       creator,
-      notifier,
+      assignee,
       date,
       time,
     });
 
     if (appointment) {
       const BookedSlots = await Appointment.find(
-        { notifier, date },
+        { assignee, date },
         {
           _id: 0,
           time: 1,
@@ -44,7 +44,7 @@ const createAppointment = asyncHandler(async (req, res) => {
 // @route   get /api/v1/appoinments
 // @access  private
 const getUserAppointments = asyncHandler(async (req, res) => {
-  const { creator, notifier } = url.parse(req.url, true).query;
+  const { creator, assignee } = url.parse(req.url, true).query;
 
   let whereQuery = {};
 
@@ -52,14 +52,37 @@ const getUserAppointments = asyncHandler(async (req, res) => {
     whereQuery["creator"] = creator;
   }
 
-  if (notifier) {
-    whereQuery["notifier"] = notifier;
+  if (assignee) {
+    whereQuery["assignee"] = assignee;
   }
   // res.status(201).json(whereQuery);
-  const list = await Appointment.find(whereQuery).sort({ date: -1 });
+  const list = await Appointment.find(whereQuery).sort({ createdAt: -1 });
 
   if (list) {
-    res.status(200).json(list);
+    const asyncRes = await Promise.all(
+      list.map(async (e) => {
+        return {
+          ...e._doc,
+          ["creator"]: await User.findOne(
+            { _id: e["creator"] },
+            {
+              name: 1,
+              email: 1,
+            }
+          ),
+          ["assignee"]: await User.findOne(
+            { _id: e["assignee"] },
+            {
+              name: 1,
+              email: 1,
+              specialist: 1,
+            }
+          ),
+        };
+      })
+    );
+
+    res.status(200).json(asyncRes);
   } else {
     res.status(400);
     throw new Error("no data found");
@@ -71,8 +94,10 @@ const getUserAppointments = asyncHandler(async (req, res) => {
 // @access  private
 const updateAppointmentStatus = asyncHandler(async (req, res) => {
   const { _id, status } = req.body;
+  console.log(req.body, "tetetetet");
+  const appointment = await Appointment.findById({ _id });
 
-  const appointment = await Appointment.findOne({ _id });
+  console.log(appointment, "found");
 
   if (appointment) {
     appointment.status = status;
@@ -91,7 +116,7 @@ const checkAvailableSlots = asyncHandler(async (req, res) => {
   const { _id, date } = url.parse(req.url, true).query;
 
   const appointment = await Appointment.find(
-    { notifier: _id, date },
+    { assignee: _id, date },
     {
       _id: 0,
       time: 1,

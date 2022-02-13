@@ -20,7 +20,7 @@ const appointmentSchema = mongoose.Schema(
       required: true,
       ref: "User",
     },
-    notifier: {
+    assignee: {
       type: mongoose.Schema.Types.ObjectId,
       required: true,
       ref: "User",
