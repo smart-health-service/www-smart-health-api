@@ -94,10 +94,7 @@ const getUserAppointments = asyncHandler(async (req, res) => {
 // @access  private
 const updateAppointmentStatus = asyncHandler(async (req, res) => {
   const { _id, status } = req.body;
-  console.log(req.body, "tetetetet");
   const appointment = await Appointment.findById({ _id });
-
-  console.log(appointment, "found");
 
   if (appointment) {
     appointment.status = status;
