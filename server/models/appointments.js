@@ -20,6 +20,10 @@ const appointmentSchema = mongoose.Schema(
       required: true,
       ref: "User",
     },
+    room: {
+      type: String,
+      default: "",
+    },
     assignee: {
       type: mongoose.Schema.Types.ObjectId,
       required: true,
