@@ -93,11 +93,15 @@ const getUserAppointments = asyncHandler(async (req, res) => {
 // @route   post /api/v1/appoinments/status
 // @access  private
 const updateAppointmentStatus = asyncHandler(async (req, res) => {
-  const { _id, status } = req.body;
+  const { _id, status, roomId } = req.body;
   const appointment = await Appointment.findById({ _id });
 
   if (appointment) {
     appointment.status = status;
+
+    if (roomId) {
+      appointment.room = roomId;
+    }
     const updatedAppointment = await appointment.save();
 
     res.status(200).send(updatedAppointment);
